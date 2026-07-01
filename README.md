@@ -1,151 +1,169 @@
 # Leitor Seguro OCR
 
-Pipeline OCR para listas de presenca com foco em velocidade, qualidade de extracao e operacao em escala via dashboard web.
+Aplicacao web para leitura e extracao estruturada de listas de presenca em PDF ou imagem, com saida em XLSX ou CSV e foco em automacao operacional.
 
-**Demo ao vivo:** https://leitor-ocr.fly.dev
+[![Demo](https://img.shields.io/badge/Demo-online-2563EB?style=for-the-badge&logo=flydotio&logoColor=white)](https://leitor-ocr.fly.dev/)
+[![Python](https://img.shields.io/badge/Python-111827?style=for-the-badge&logo=python&logoColor=3776AB)](#stack)
+[![OCR](https://img.shields.io/badge/OCR-hibrido-111827?style=for-the-badge&logo=googlecloud&logoColor=4285F4)](#arquitetura-resumida)
+[![Excel](https://img.shields.io/badge/Saida-XLSX-111827?style=for-the-badge&logo=microsoftexcel&logoColor=1D6F42)](#visao-geral)
 
 ## Visao Geral
 
-Este projeto processa PDFs e imagens de listas de presenca e gera planilhas estruturadas (`XLSX` ou `CSV`) com rastreabilidade de execucao.
+O Leitor Seguro OCR foi criado para reduzir o trabalho manual de leitura de listas de presenca e transformar documentos em dados prontos para operacao. O sistema processa arquivos em PDF ou imagem, identifica presenca, rubricas e manuscritos e devolve o resultado em planilha estruturada.
 
-Principais objetivos:
-- processamento rapido para alto volume de documentos;
-- melhor leitura de campos manuscritos sem perder consistencia estrutural;
-- fallback seletivo para aumentar confiabilidade;
-- operacao simples para equipes nao tecnicas.
+O projeto foi pensado para cenarios reais de uso, com foco em:
 
-## Destaques Tecnicos
+- velocidade de processamento;
+- melhor leitura de campos manuscritos;
+- confiabilidade com fallback por pagina;
+- rastreabilidade da execucao;
+- entrega final pronta para conferencia em Excel.
 
-- Pipeline hibrido: Gemini como caminho principal + Document AI como fallback por pagina.
-- Processamento pagina a pagina com perfil dinamico por tamanho do arquivo e quantidade de paginas.
-- Dashboard com upload, historico, download e limpeza de historico.
-- Logs de tempo por etapa para auditoria de performance.
-- Suporte a execucao local e Cloud Run.
+## O que o sistema faz
 
-## Arquitetura (resumo)
+- recebe PDF, JPG, JPEG e PNG;
+- renderiza paginas e escolhe perfil de processamento;
+- usa Gemini como leitura principal;
+- usa Document AI como fallback quando necessario;
+- classifica presenca, rubrica, nome manuscrito e marcacoes;
+- gera XLSX ou CSV com estrutura pronta para uso;
+- registra historico, auditoria e estado dos jobs no painel.
+
+## Arquitetura resumida
 
 ```mermaid
 flowchart LR
-  A["Upload PDF/Imagem"] --> B["Inspecao de carga (paginas + tamanho)"]
-  B --> C["Render pagina a pagina"]
-  C --> D["OCR Gemini (principal)"]
-  D --> E{"Qualidade minima ok?"}
-  E -- "sim" --> G["Normalizacao + planilha"]
-  E -- "nao" --> F["Fallback Document AI por pagina"]
+  A["Upload PDF/Imagem"] --> B["Inspecao do arquivo"]
+  B --> C["Renderizacao pagina a pagina"]
+  C --> D["Gemini Vision"]
+  D --> E{"Qualidade suficiente?"}
+  E -- "sim" --> G["Normalizacao dos dados"]
+  E -- "nao" --> F["Fallback Document AI"]
   F --> G
   G --> H["XLSX/CSV + historico + auditoria"]
 ```
 
 ## Stack
 
-- Python 3.11+
-- OCR/IA: Gemini + Document AI
-- Backend Web: `http.server` customizado
-- Armazenamento:
-- Local: SQLite + filesystem
-- Cloud: Firestore + Google Cloud Storage
-- Deploy: Docker + Cloud Run
+### Backend e processamento
 
-## Estrutura do Projeto
+- Python 3.11+
+- servidor web customizado com `http.server`
+- pipeline OCR por pagina
+- SQLite e filesystem no modo local
+- Firestore e Google Cloud Storage no modo cloud
+
+### OCR e documentos
+
+- Gemini
+- Google Document AI
+- PyMuPDF
+- Pillow
+- openpyxl
+- rapidocr-onnxruntime
+
+### Deploy
+
+- Docker
+- Fly.io
+- Cloud Run
+
+## Estrutura principal
 
 ```text
 leitor_OCR/
-  web_app.py                  # servidor web e rotas
-  attendance_pipeline.py      # orquestrador do pipeline hibrido
-  gemini_extractor.py         # extracao via Gemini por pagina
-  documentai_extractor.py     # fallback com Document AI
-  extrator_ocr.py             # renderizacao e utilitarios OCR
-  assinatura_lista.py         # regras de pos-processamento das listas
-  static/                     # frontend (dashboard)
-  tests/                      # testes automatizados
-  requirements.txt            # dependencias Python
+  web_app.py                # servidor web e rotas
+  attendance_pipeline.py    # orquestracao do pipeline hibrido
+  gemini_extractor.py       # extracao via Gemini
+  documentai_extractor.py   # fallback com Document AI
+  extrator_ocr.py           # renderizacao e utilitarios OCR
+  postprocess_manuscrito.py # tratamento de texto manuscrito
+  static/                   # dashboard web
+  tests/                    # testes automatizados
+  docs/                     # arquitetura e deploy
 ```
 
-## Como Rodar Localmente
+## Como rodar localmente
 
-1. Criar ambiente virtual:
+### Pre-requisitos
+
+- Python 3.11+
+
+### Instalacao
+
 ```bash
 python -m venv .venv
 ```
 
-2. Ativar ambiente:
 ```bash
-# Windows (PowerShell)
+# PowerShell
 .venv\Scripts\Activate.ps1
-```
-
-3. Instalar dependencias:
-```bash
 pip install -r requirements.txt
-```
-
-4. Configurar variaveis de ambiente:
-```bash
 copy .env.example .env
-```
-
-5. Iniciar o app:
-```bash
 python web_app.py
 ```
 
-6. Acessar no navegador:
+Depois disso, acesse:
+
 ```text
 http://127.0.0.1:8000
 ```
 
-## Deploy em Producao (Cloud Run)
+## Variaveis importantes
 
-Deploy rapido:
-```bash
-gcloud run deploy leitor-ocr --source . --region southamerica-east1 --project listreader
+```env
+OCR_USE_GEMINI=true
+OCR_USE_DOCUMENTAI=true
+OCR_STORAGE_MODE=cloud
+OCR_GCS_BUCKET=
+OCR_GEMINI_MAX_CONCURRENCY=4
+OCR_TIMING_LOGS=true
 ```
 
-Scripts utilitarios:
-- `deploy_manual.ps1` (fonte local para Cloud Run)
-- `deploy.ps1` (Cloud Build + deploy)
-- `deploy_with_auth.ps1` (build/push de imagem + deploy)
-- `verify_prod_readiness.ps1` (check de prontidao)
+## Testes
 
-## Configuracoes Importantes
-
-Exemplos de variaveis relevantes:
-- `OCR_USE_GEMINI=true`
-- `OCR_USE_DOCUMENTAI=true`
-- `OCR_GEMINI_MAX_CONCURRENCY=4`
-- `OCR_GEMINI_STABLE_MAX_CONCURRENCY=4`
-- `OCR_GEMINI_SMALL_DPI=180`
-- `OCR_GEMINI_MEDIUM_DPI=160`
-- `OCR_GEMINI_LARGE_DPI=140`
-- `OCR_TIMING_LOGS=true`
-- `OCR_STORAGE_MODE=cloud`
-- `OCR_GCS_BUCKET=<bucket>`
-
-## Qualidade e Testes
-
-Rodar testes:
 ```bash
 python -m unittest discover -s tests -q
 ```
 
-## Fluxo Operacional
+## Fluxo operacional
 
-- Upload de PDF/JPG/PNG ate 25MB.
-- Selecao de formato de saida (`XLSX` recomendado).
-- Processamento assicrono com atualizacao automatica no painel.
-- Download do resultado e auditoria dos eventos.
+1. Upload do arquivo
+2. Analise de paginas e tamanho
+3. OCR principal
+4. Fallback seletivo
+5. Normalizacao dos dados
+6. Geração da planilha
+7. Download e consulta do historico
 
-## Documentacao Complementar
+## Objetivo do projeto
 
-- [ARQUITETURA.md](./ARQUITETURA.md)
-- [DEPLOY.md](./DEPLOY.md)
-- [DEPLOY_CLOUD.md](./DEPLOY_CLOUD.md)
-- [DOCUMENTAI_SETUP.md](./DOCUMENTAI_SETUP.md)
-- [CHECKLIST_ACEITE_PRODUCAO.md](./CHECKLIST_ACEITE_PRODUCAO.md)
-- [CHANGES.md](./CHANGES.md)
+Este projeto faz parte do meu portfolio como exemplo de automacao aplicada a documentos e OCR em contexto operacional. Ele foi desenvolvido para mostrar:
 
-## Observacoes
+- aplicacao pratica de IA em processo de negocio;
+- pipeline de extracao com tolerancia a variacao de entrada;
+- organizacao de dados para uso real;
+- preocupacao com auditabilidade, historico e saida operacional.
 
-- O modo de acesso da interface pode ser ajustado para login obrigatorio por usuario.
-- Em ambiente cloud, mantenha credenciais e segredos fora do repositorio.
-- Para volumes altos, priorize monitoramento de latencia por pagina e revisao periodica dos perfis de processamento.
+## Demo
+
+- Aplicacao online: https://leitor-ocr.fly.dev/
+
+## Repositorio
+
+- Codigo: https://github.com/Cesare221/Leitor_OCR
+
+## Documentacao complementar
+
+- [Arquitetura](./docs/ARQUITETURA.md)
+- [Deploy Fly.io](./docs/DEPLOY_FLY.md)
+- [Deploy Cloud Run](./docs/DEPLOY_CLOUD.md)
+- [Document AI Setup](./docs/DOCUMENTAI_SETUP.md)
+
+## Contato
+
+- Portfolio: https://cesarddev.com.br/
+- GitHub: https://github.com/Cesare221
+- LinkedIn: https://linkedin.com/in/cdelmondes
+
+Se este projeto fizer sentido para o seu contexto, fico a disposicao para conversar sobre OCR, automacao de documentos e estruturacao de pipelines de extracao.
