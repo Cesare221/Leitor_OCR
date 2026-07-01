@@ -18,7 +18,7 @@
 ## Primeiro deploy
 
 ```powershell
-.\deploy_fly.ps1 -Init
+.\deploy\deploy_fly.ps1 -Init
 ```
 
 O script vai:
@@ -34,7 +34,7 @@ Após o deploy, acesse `https://leitor-ocr.fly.dev/setup` para criar o primeiro 
 ## Deploys subsequentes
 
 ```powershell
-.\deploy_fly.ps1
+.\deploy\deploy_fly.ps1
 ```
 
 ---
@@ -75,7 +75,7 @@ de iniciar o app. Veja a seção abaixo.
 
 ### Entrypoint para credenciais GCP
 
-Crie o arquivo `entrypoint.sh` na raiz do projeto (já incluído):
+Crie o arquivo `deploy/entrypoint.sh` no projeto (já incluído):
 
 ```bash
 # Grava o JSON da service account em disco se o secret estiver definido
@@ -97,7 +97,7 @@ O `Dockerfile` deve usar este entrypoint (já configurado na versão atualizada)
 | `local` (padrão) | SQLite + volume Fly.io | Recomendado — sem dependência de GCP |
 | `cloud` | Firestore + GCS | Se quiser manter dados no Google |
 
-Para alternar, mude `OCR_STORAGE_MODE` no `fly.toml` ou via:
+Para alternar, mude `OCR_STORAGE_MODE` no `deploy/fly.toml` ou via:
 ```powershell
 flyctl secrets set OCR_STORAGE_MODE=cloud --app leitor-ocr
 ```

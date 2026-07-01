@@ -22,7 +22,7 @@ COPY . .
 RUN mkdir -p /tmp/data/uploads /tmp/data/outputs /data/uploads /data/outputs
 
 # Copia e prepara o entrypoint
-COPY entrypoint.sh /entrypoint.sh
+COPY deploy/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Variáveis de ambiente padrão (sobrescritas pelo fly.toml em produção)

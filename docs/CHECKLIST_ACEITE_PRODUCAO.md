@@ -25,7 +25,7 @@
 ## 3) Storage cloud sem falha de indice
 
 - Aplicar indice Firestore:
-  - arquivo: `firestore.indexes.json`
+  - arquivo: `deploy/firestore.indexes.json`
   - comando:
     - `gcloud firestore indexes composite create --collection-group=jobs --field-config=field-path=user_id,order=ascending --field-config=field-path=created_at,order=descending --project=listreader`
 - Confirmar que `/dashboard` e `/jobs-feed` carregam sem erro 5xx.

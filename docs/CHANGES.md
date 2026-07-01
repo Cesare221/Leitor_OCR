@@ -9,7 +9,7 @@
 | `documentai_extractor.py` | Módulo principal de integração com Document AI |
 | `setup_documentai.py` | Script de configuração do processor |
 | `test_documentai.py` | Script de teste da integração |
-| `DOCUMENTAI_SETUP.md` | Guia completo de configuração |
+| `docs/DOCUMENTAI_SETUP.md` | Guia completo de configuração |
 | `.env.example` | Exemplo de variáveis de ambiente |
 | `.gitignore` | Arquivo para proteger credenciais |
 

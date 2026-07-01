@@ -102,10 +102,10 @@ gcloud run deploy leitor-ocr --source . --region southamerica-east1 --project li
 ```
 
 Scripts utilitarios:
-- `deploy_manual.ps1` (fonte local para Cloud Run)
-- `deploy.ps1` (Cloud Build + deploy)
-- `deploy_with_auth.ps1` (build/push de imagem + deploy)
-- `verify_prod_readiness.ps1` (check de prontidao)
+- `deploy/deploy_manual.ps1` (fonte local para Cloud Run)
+- `deploy/deploy.ps1` (Cloud Build + deploy)
+- `deploy/deploy_with_auth.ps1` (build/push de imagem + deploy)
+- `deploy/verify_prod_readiness.ps1` (check de prontidao)
 
 ## Configuracoes Importantes
 
@@ -137,12 +137,12 @@ python -m unittest discover -s tests -q
 
 ## Documentacao Complementar
 
-- [ARQUITETURA.md](./ARQUITETURA.md)
-- [DEPLOY.md](./DEPLOY.md)
-- [DEPLOY_CLOUD.md](./DEPLOY_CLOUD.md)
-- [DOCUMENTAI_SETUP.md](./DOCUMENTAI_SETUP.md)
-- [CHECKLIST_ACEITE_PRODUCAO.md](./CHECKLIST_ACEITE_PRODUCAO.md)
-- [CHANGES.md](./CHANGES.md)
+- [ARQUITETURA.md](./docs/ARQUITETURA.md)
+- [DEPLOY.md](./docs/DEPLOY.md)
+- [DEPLOY_CLOUD.md](./docs/DEPLOY_CLOUD.md)
+- [DOCUMENTAI_SETUP.md](./docs/DOCUMENTAI_SETUP.md)
+- [CHECKLIST_ACEITE_PRODUCAO.md](./docs/CHECKLIST_ACEITE_PRODUCAO.md)
+- [CHANGES.md](./docs/CHANGES.md)
 
 ## Observacoes
 

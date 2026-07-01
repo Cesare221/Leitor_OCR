@@ -117,8 +117,8 @@ leitor_OCR/
 ├── gemini_ocr.py               # Módulo auxiliar Gemini (não usado atualmente)
 ├── Dockerfile                  # Container para Cloud Run
 ├── requirements.txt            # Dependências Python
-├── cloud-run-config.yaml       # Configuração do serviço
-├── cloudbuild.yaml             # Build automático
+├── deploy/cloud-run-config.yaml       # Configuração do serviço
+├── deploy/cloudbuild.yaml             # Build automático
 ├── static/styles.css           # Estilos da interface web
 └── data/                       # Dados locais (uploads, outputs, SQLite)
 ```

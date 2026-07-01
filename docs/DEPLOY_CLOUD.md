@@ -34,13 +34,13 @@ gcloud services enable \
 
 #### Windows (PowerShell):
 ```powershell
-powershell -ExecutionPolicy Bypass -File deploy.ps1
+powershell -ExecutionPolicy Bypass -File deploy/deploy.ps1
 ```
 
 #### Linux/Mac (Bash):
 ```bash
-chmod +x deploy.sh
-./deploy.sh
+chmod +x deploy/deploy.sh
+./deploy/deploy.sh
 ```
 
 ### MÃ©todo B: Manual com gcloud
@@ -54,7 +54,7 @@ gcloud artifacts repositories create leitor-ocr-repo \
 
 # Faz build e deploy
 gcloud builds submit \
-    --config=cloudbuild.yaml \
+    --config=deploy/cloudbuild.yaml \
     --substitutions=_SERVICE=leitor-ocr,_REGION=southamerica-east1,_REPOSITORY=leitor-ocr-repo,_TAG=v1.0.0 \
     --project=listreader
 ```
@@ -165,7 +165,7 @@ gcloud firestore indexes composite create \
   --project=listreader
 ```
 
-Indice versionado no projeto: [firestore.indexes.json](/C:/Users/Usuario/Desktop/kironew/leitor_OCR/firestore.indexes.json).
+Indice versionado no projeto: [deploy/firestore.indexes.json](./deploy/firestore.indexes.json).
 
 ## Ver logs
 
@@ -186,10 +186,10 @@ Basta executar o deploy novamente. O Cloud Build criarÃ¡ uma nova versÃ£o:
 
 ```bash
 # Windows
-powershell -ExecutionPolicy Bypass -File deploy.ps1
+powershell -ExecutionPolicy Bypass -File deploy/deploy.ps1
 
 # Linux/Mac
-./deploy.sh
+./deploy/deploy.sh
 ```
 
 ## Custo estimado
