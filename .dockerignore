@@ -1,0 +1,47 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Data
+data/
+*.pdf
+*.xlsx
+*.csv
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Credenciais
+*.json
+service-account.json
+credentials.json
+
+# Arquivos de deploy (opcional)
+# .env
+# .env.local
+
+# Documentação (opcional, descomente se quiser incluir)
+# *.md
+

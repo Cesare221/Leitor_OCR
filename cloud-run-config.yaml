@@ -1,0 +1,98 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: leitor-ocr
+  namespace: projects/listreader/locations/southamerica-east1
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+        autoscaling.knative.dev/maxScale: "10"
+        run.googleapis.com/timeout: "15m"
+        run.googleapis.com/cpu-throttling: "false"
+    spec:
+      containerConcurrency: 20
+      timeoutSeconds: 900
+      containers:
+        - image: southamerica-east1-docker.pkg.dev/listreader/leitor-ocr-repo/leitor-ocr:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: OCR_USE_GEMINI
+              value: "true"
+            - name: OCR_USE_DOCUMENTAI
+              value: "true"
+            - name: OCR_STABLE_PRODUCTION_MODE
+              value: "true"
+            - name: OCR_GEMINI_MAX_CONCURRENCY
+              value: "4"
+            - name: OCR_GEMINI_STABLE_MAX_CONCURRENCY
+              value: "4"
+            - name: OCR_GEMINI_SMALL_DPI
+              value: "180"
+            - name: OCR_GEMINI_MEDIUM_DPI
+              value: "160"
+            - name: OCR_GEMINI_LARGE_DPI
+              value: "140"
+            - name: OCR_GEMINI_MIN_ROWS_PER_PAGE
+              value: "8"
+            - name: OCR_GEMINI_LOCATION
+              value: "southamerica-east1"
+            - name: OCR_GEMINI_MODEL
+              value: "gemini-2.5-flash"
+            - name: OCR_GEMINI_FAST_MODEL
+              value: "gemini-2.0-flash-lite"
+            - name: OCR_GEMINI_STRONG_MODEL
+              value: "gemini-2.5-flash"
+            - name: OCR_ENABLE_FAST_MODEL_FIRST_PASS
+              value: "true"
+            - name: OCR_GEMINI_FAST_MODEL_AVAILABLE
+              value: "false"
+            - name: OCR_GEMINI_WARMUP_ENABLED
+              value: "true"
+            - name: OCR_GEMINI_WARMUP_TIMEOUT_SECONDS
+              value: "8"
+            - name: OCR_GEMINI_WARMUP_TTL_SECONDS
+              value: "1800"
+            - name: OCR_GEMINI_FAST_TIMEOUT_SECONDS
+              value: "45"
+            - name: OCR_GEMINI_STRONG_TIMEOUT_SECONDS
+              value: "90"
+            - name: OCR_GEMINI_FAST_RETRIES
+              value: "1"
+            - name: OCR_GEMINI_STRONG_RETRIES
+              value: "2"
+            - name: OCR_ENABLE_SMART_REFINE
+              value: "false"
+            - name: OCR_ENABLE_VISUAL_ABSENCE_GUARD
+              value: "true"
+            - name: OCR_ENABLE_RAPIDOCR
+              value: "true"
+            - name: OCR_RAPIDOCR_MIN_CONFIDENCE
+              value: "0.45"
+            - name: OCR_TIMING_LOGS
+              value: "true"
+            - name: OCR_JOB_WORKERS
+              value: "3"
+            - name: OCR_STORAGE_MODE
+              value: "cloud"
+            - name: OCR_DOCUMENTAI_PROJECT_ID
+              value: "listreader"
+            - name: OCR_DOCUMENTAI_LOCATION
+              value: "us"
+            - name: OCR_DOCUMENTAI_PROCESSOR_ID
+              value: "c50310d2f5b3f7a7"
+            - name: OCR_WEB_HOST
+              value: "0.0.0.0"
+            - name: OCR_DATA_DIR
+              value: "/tmp/data"
+            - name: PORT
+              value: "8080"
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "2000m"
+            requests:
+              memory: "512Mi"
+              cpu: "500m"

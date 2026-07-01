@@ -1,0 +1,17 @@
+# Cloud Build - apenas build e push da imagem
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', 'southamerica-east1-docker.pkg.dev/listreader/leitor-ocr-repo/leitor-ocr:latest',
+      '.'
+    ]
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'push', 'southamerica-east1-docker.pkg.dev/listreader/leitor-ocr-repo/leitor-ocr:latest'
+    ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_HIGHCPU_8'

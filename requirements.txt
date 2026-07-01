@@ -1,0 +1,8 @@
+PyMuPDF>=1.24.0
+Pillow>=10.0.0
+openpyxl>=3.1.0
+google-cloud-documentai>=2.20.0
+google-cloud-storage>=2.18.0
+google-cloud-firestore>=2.18.0
+requests>=2.28.0
+rapidocr-onnxruntime>=1.4.4

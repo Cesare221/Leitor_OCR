@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Local data and runtime artifacts
+data/
+*.sqlite3
+*.db
+*.log
+*.tmp
+*.bak
+*.orig
+*.pkl
+
+# OCR / benchmark outputs
+acceptance_readiness_*.txt
+acceptance_summary_*.txt
+benchmark_report_*.html
+benchmark_suite_*.csv
+tmp_benchmark_*
+tmp_legacy_compare.xlsx
+tmp_profile_run.xlsx
+tmp_seq_*.xlsx
+profile_attendance_*.prof
+analysis_outputs_*/
+debug_crops/
+outputs/
+uploads/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Credentials
+*.pem
+*.p12
+service-account.json
+credentials.json
+google-application-credentials*.json
+
+# Keep Cloud Firestore index definition versioned
+!firestore.indexes.json

@@ -1,0 +1,72 @@
+# Fly.io configuration for Leitor Seguro OCR
+# Docs: https://fly.io/docs/reference/configuration/
+
+app = "leitor-ocr"
+primary_region = "gru"  # São Paulo - região mais próxima do Brasil
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT                              = "8080"
+  OCR_WEB_HOST                      = "0.0.0.0"
+  OCR_DATA_DIR                      = "/data"
+  OCR_STORAGE_MODE                  = "local"
+  OCR_USE_GEMINI                    = "true"
+  OCR_USE_DOCUMENTAI                = "true"
+  OCR_STABLE_PRODUCTION_MODE        = "true"
+  OCR_GEMINI_MODEL                  = "gemini-2.5-flash"
+  OCR_GEMINI_FAST_MODEL             = "gemini-2.0-flash-lite"
+  OCR_GEMINI_STRONG_MODEL           = "gemini-2.5-flash"
+  OCR_GEMINI_LOCATION               = "southamerica-east1"
+  OCR_GEMINI_MAX_CONCURRENCY        = "3"
+  OCR_GEMINI_STABLE_MAX_CONCURRENCY = "3"
+  OCR_GEMINI_SMALL_DPI              = "180"
+  OCR_GEMINI_MEDIUM_DPI             = "160"
+  OCR_GEMINI_LARGE_DPI              = "140"
+  OCR_GEMINI_MIN_ROWS_PER_PAGE      = "8"
+  OCR_GEMINI_WARMUP_ENABLED         = "true"
+  OCR_GEMINI_WARMUP_TIMEOUT_SECONDS = "8"
+  OCR_GEMINI_WARMUP_TTL_SECONDS     = "1800"
+  OCR_GEMINI_FAST_TIMEOUT_SECONDS   = "45"
+  OCR_GEMINI_STRONG_TIMEOUT_SECONDS = "90"
+  OCR_GEMINI_FAST_RETRIES           = "1"
+  OCR_GEMINI_STRONG_RETRIES         = "2"
+  OCR_GEMINI_FAST_MODEL_AVAILABLE   = "false"
+  OCR_ENABLE_FAST_MODEL_FIRST_PASS  = "true"
+  OCR_ENABLE_SMART_REFINE           = "false"
+  OCR_ENABLE_VISUAL_ABSENCE_GUARD   = "true"
+  OCR_ENABLE_RAPIDOCR               = "true"
+  OCR_RAPIDOCR_MIN_CONFIDENCE       = "0.45"
+  OCR_JOB_WORKERS                   = "3"
+  OCR_TIMING_LOGS                   = "true"
+  OCR_COOKIE_SECURE                 = "true"
+  OCR_DOCUMENTAI_PROJECT_ID         = "listreader"
+  OCR_DOCUMENTAI_LOCATION           = "us"
+  OCR_DOCUMENTAI_PROCESSOR_ID       = "c50310d2f5b3f7a7"
+
+# Secrets que NÃO devem ficar aqui — use: fly secrets set NOME=valor
+# - OCR_GEMINI_API_KEY
+# - GOOGLE_APPLICATION_CREDENTIALS_JSON  (conteúdo do service account JSON)
+# - OCR_SETUP_TOKEN
+
+[http_service]
+  internal_port        = 8080
+  force_https          = true
+  auto_stop_machines   = false   # manter sempre ligado (evita cold start)
+  auto_start_machines  = true
+  min_machines_running = 1
+
+  [http_service.concurrency]
+    type       = "requests"
+    hard_limit = 25
+    soft_limit = 20
+
+# Volume persistente para SQLite e arquivos processados
+[[mounts]]
+  source      = "leitor_ocr_data"
+  destination = "/data"
+
+[[vm]]
+  memory = "1gb"
+  cpus   = 1
