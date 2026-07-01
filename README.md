@@ -2,6 +2,8 @@
 
 Pipeline OCR para listas de presenca com foco em velocidade, qualidade de extracao e operacao em escala via dashboard web.
 
+**Live demo:** https://leitor-ocr.fly.dev
+
 ## Visao Geral
 
 Este projeto processa PDFs e imagens de listas de presenca e gera planilhas estruturadas (`XLSX` ou `CSV`) com rastreabilidade de execucao.
